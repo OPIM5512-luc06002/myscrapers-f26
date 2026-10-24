@@ -33,7 +33,7 @@ REGION               = os.getenv("REGION", "us-central1")
 BUCKET_NAME          = os.getenv("GCS_BUCKET", "")
 STRUCTURED_PREFIX    = os.getenv("STRUCTURED_PREFIX", "structured")
 LLM_PROVIDER         = os.getenv("LLM_PROVIDER", "vertex").lower()
-LLM_MODEL            = os.getenv("LLM_MODEL", "gemini-2.5-flash")
+LLM_MODEL            = "gemini-3.5-flash"
 OVERWRITE_DEFAULT    = os.getenv("OVERWRITE", "false").lower() == "true"
 MAX_FILES_DEFAULT    = int(os.getenv("MAX_FILES", "0") or 0)
 MAX_RUNS_PER_CALL    = int(os.getenv("MAX_RUNS_PER_CALL", "24"))   # safety cap: runs handled per call
@@ -73,7 +73,7 @@ def _get_vertex_model() -> GenerativeModel:
             raise RuntimeError("PROJECT_ID environment variable is missing.")
         
         # Initialize client once per container lifecycle
-        vertexai.init(project=PROJECT_ID, location=REGION)
+        vertexai.init(project=PROJECT_ID, location="global")
         _CACHED_MODEL_OBJ = GenerativeModel(LLM_MODEL)
         logging.info(f"Initialized Vertex AI model: {LLM_MODEL} in {REGION}")
     return _CACHED_MODEL_OBJ
